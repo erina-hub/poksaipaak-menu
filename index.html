@@ -55,7 +55,9 @@
             </div>
         </div>
         <div class="note-box">‼️ ราคาและปริมาณของผลไม้ อาจปรับขึ้น-ลง ตามกลไกราคาในตลาดนะคะ ‼️</div>
+        
         <div id="menu-container"></div>
+        
         <div class="footer-notes">
             <p>🎀 จัดเซ็ตเยี่ยมไข้ ของขวัญ ของฝาก ผูกโบว์ เขียนการ์ด ลูกค้าแจ้งได้เลย ร้านมีบริการให้ค่ะ</p>
             <p>🛵 มีบริการส่งด้วยไรเดอร์ค่ะ กรณีให้ร้านส่งจะมีเป็นรอบ รบกวนลูกค้าสั่งล่วงหน้านะคะ</p>
@@ -71,21 +73,35 @@
     </div>
 
     <script>
-        // ⚠️ นำ URL ของ Web App มาใส่ที่นี่ ⚠️
-        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby78IpT7zinQJ792XxNxPjtyedTCUs1BJHnsvUxPnd2y5H6zkB_kR2zZV6fY0OVsOCe/exec'; 
-        let menuData = []; let cart = {};
+        // 🌟 ใส่ข้อมูลผลไม้ไว้ในเว็บโดยตรง ไม่ต้องผ่าน Google Sheets 🌟
+        // หากต้องการเปลี่ยนสถานะให้แก้คำว่า true เป็น false
+        const menuData = [
+            { id: '1', name: 'แก้วมังกรขาว เวียดนาม', price: 50, category: 50, available: true },
+            { id: '2', name: 'สาลี่ทอง เนื้อฉ่ำ กรอบ หวานหอม', price: 50, category: 50, available: true },
+            { id: '3', name: 'แคนตาลูปซันเลดี้ เนื้อหวาน อร่อย', price: 50, category: 50, available: true },
+            { id: '4', name: 'มะม่วงเปรี้ยวหั่นชิ้นพอดีคำ+น้ำจิ้ม', price: 50, category: 50, available: true },
+            { id: '5', name: 'มะม่วงสามรสหั่นชิ้นกินเพลิน+น้ำจิ้ม', price: 50, category: 50, available: true },
+            { id: '6', name: 'มะม่วงมันหั่นชิ้นกินง่าย+น้ำจิ้ม', price: 50, category: 50, available: true },
+            { id: '7', name: 'ส้มไต้หวัน หวาน อร่อย ชิ้นใหญ่เต็มคำ', price: 60, category: 60, available: true },
+            { id: '8', name: 'แตงโมบอล ทูโทน (วันนี้มีสองสี)', price: 60, category: 60, available: true },
+            { id: '9', name: 'ฝรั่งแช่บ๊วยโบราณ บ๊วยเค็มแท้', price: 60, category: 60, available: true },
+            { id: '10', name: 'สับปะรดหอมสุวรรณ กลิ่นหอม เนื้อกรอบ', price: 60, category: 60, available: true },
+            { id: '11', name: 'มะละกอฮอลแลนด์', price: 60, category: 60, available: true },
+            { id: '12', name: 'แอปเปิ้ลฟูจิ กรอบ อร่อย หวานอมเปรี้ยวหน่อยๆ', price: 60, category: 60, available: true },
+            { id: '13', name: 'ส้มวอกาน หวานนำเปรี้ยวปลาย เกล็ดแน่น', price: 80, category: 80, available: true },
+            { id: '14', name: 'เมล่อนญี่ปุ่น สีเขียว เนื้อนุ่ม กลิ่นหอม', price: 80, category: 80, available: true },
+            { id: '15', name: 'กีวี่ (ใช้กีวี่เซสปรี ไม่ใช่กีวี่จีนค่ะ)', price: 90, category: 90, available: true },
+            { id: '16', name: 'แอปเปิ้ลเอนวี่ (กล่องใหญ่) เปลือกบาง', price: 90, category: 90, available: true },
+            { id: '17', name: 'กระท้อนทรงเครื่องโบราณ', price: 90, category: 90, available: true },
+            { id: '18', name: 'กระท้อนทรงเครื่องน้ำปลาร้าหวานข้าวคั่ว', price: 90, category: 90, available: true },
+            { id: '19', name: 'สละสุมาลีทรงเครื่องโบราณ (ไม่ได้คว้านเมล็ด)', price: 90, category: 90, available: true },
+            { id: '20', name: 'สละสุมาลีทรงเครื่องน้ำปลาร้าหวานข้าวคั่ว', price: 90, category: 90, available: true },
+            { id: '21', name: 'ลิ้นจี่แกะเมล็ดพร้อมทาน', price: 100, category: 100, available: true },
+            { id: '22', name: 'สละสุมาลีคว้านเมล็ดพร้อมทาน', price: 100, category: 100, available: true }
+        ];
 
-        async function loadData() {
-            try {
-                document.getElementById('menu-container').innerHTML = '<div style="text-align:center; padding:40px;">กำลังโหลดข้อมูลผลไม้สดๆ... ⏳</div>';
-                const response = await fetch(SCRIPT_URL + '?action=getData');
-                menuData = await response.json();
-                renderMenu();
-            } catch (error) {
-                document.getElementById('menu-container').innerHTML = '<div style="text-align:center; padding:20px; color:red;">โหลดข้อมูลไม่สำเร็จ กรุณารีเฟรชหน้าเว็บ</div>';
-            }
-        }
-        
+        let cart = {};
+
         function renderMenu() {
             const container = document.getElementById('menu-container');
             container.innerHTML = '';
@@ -166,19 +182,14 @@
                     totalPrice += linePrice;
                 }
             }
-            orderText += "------------------------\ยอดรวมทั้งหมด: " + totalPrice + " ฿\n\n(หากมีน้ำจิ้มที่ต้องการ หรือหมายเหตุเพิ่มเติม พิมพ์ต่อท้ายได้เลยนะคะ)";
+            orderText += "------------------------\nยอดรวมทั้งหมด: " + totalPrice + " ฿\n\n(หากมีน้ำจิ้มที่ต้องการ หรือหมายเหตุเพิ่มเติม พิมพ์ต่อท้ายได้เลยนะคะ)";
             navigator.clipboard.writeText(orderText).then(() => {
                 alert("✅ คัดลอกรายการสั่งซื้อเรียบร้อยแล้ว!\n\nคุณลูกค้าสามารถกดปุ่ม LINE หรือ Messenger ด้านบน เพื่อนำไป 'วาง' ในแชทได้เลยค่ะ");
             });
         }
 
-        loadData();
-        // ลูกค้าจะมีการรีเฟรชข้อมูลเบื้องหลังทุก 15 วินาที
-        setInterval(() => {
-            fetch(SCRIPT_URL + '?action=getData').then(res => res.json()).then(data => {
-                menuData = data; renderMenu();
-            });
-        }, 15000); 
+        // วาดเมนูทันทีเมื่อเปิดเว็บ
+        renderMenu();
     </script>
 </body>
 </html>

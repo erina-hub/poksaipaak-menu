@@ -23,7 +23,7 @@
         .note-box { background-color: var(--apple-red-light); border: 2px dashed var(--apple-red); padding: 15px; border-radius: 8px; margin: 20px 0; text-align: center; color: var(--apple-red); font-weight: bold; }
         
         .category-title { background-color: var(--apple-red); color: white; padding: 8px 20px; border-radius: 25px; display: inline-block; margin: 25px 0 15px 0; font-size: 18px; }
-        .cat-dip { background-color: #E68A00; } /* เปลี่ยนสีหมวดน้ำจิ้มให้ต่างจากผลไม้ */
+        .cat-dip { background-color: #E68A00; } /* สีหมวดน้ำจิ้ม */
 
         .product-item { display: flex; justify-content: space-between; align-items: center; padding: 15px 0; border-bottom: 1px solid var(--border-color); }
         .product-info { flex: 1; padding-right: 15px; word-break: keep-all; }
@@ -103,7 +103,6 @@
     </div>
 
     <script>
-        // ⚠️ วาง URL ของคุณที่นี่ (อันที่ใช้งานได้แล้ว) ⚠️
         const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbziXKeVFE-_qwH1dEdE_AAGDvZmpZEKytWOSPjv-y3QrTVMosy2osVSwjMHs0epHdvt/exec'; 
         
         let menuData = []; 
@@ -123,57 +122,67 @@
             const container = document.getElementById('menu-container');
             container.innerHTML = '';
             
-            // เพิ่มหมวด 0 (ฟรี) และ 20 (น้ำจิ้มเสียเงิน)
-            const categories = [50, 60, 80, 90, 100, 0, 20];
-
-            categories.forEach(cat => {
-                const items = menuData.filter(item => item.category === cat);
+            // 1. หมวดผลไม้ปกติ (ดึงตามช่วงราคา)
+            const standardCats = [40, 50, 60, 70, 80, 90, 100]; // ใส่เผื่อไว้ให้ครบทุกช่วงราคา
+            standardCats.forEach(cat => {
+                const items = menuData.filter(item => Number(item.category) === cat);
                 if (items.length > 0) {
-                    const catTitle = document.createElement('div');
-                    
-                    // ตั้งชื่อหมวดหมู่ให้เข้ากับราคา
-                    if (cat === 0) {
-                        catTitle.className = 'category-title cat-dip';
-                        catTitle.innerText = `🥣 ---- ตัวเลือกน้ำจิ้ม (ฟรี) ---- 🥣`;
-                    } else if (cat === 20) {
-                        catTitle.className = 'category-title cat-dip';
-                        catTitle.innerText = `🥣 ---- น้ำจิ้ม (เพิ่มเงิน) ---- 🥣`;
-                    } else {
-                        catTitle.className = 'category-title';
-                        catTitle.innerText = `🍓 ---- กล่องละ ${cat}฿ ---- 🍓`;
-                    }
-                    
-                    container.appendChild(catTitle);
-
-                    items.forEach(item => {
-                        const cartQty = cart[item.id] || 0;
-                        const itemDiv = document.createElement('div');
-                        itemDiv.className = 'product-item';
-                        
-                        const statusHTML = item.available 
-                            ? `<div class="product-status status-in">✓ มีพร้อมส่ง</div>`
-                            : `<div class="product-status status-out">✗ สินค้าหมดชั่วคราว</div>`;
-
-                        itemDiv.innerHTML = `
-                            <div class="product-info">
-                                <div class="product-name ${!item.available ? 'out-of-stock-text' : ''}">✔️ ${item.name}</div>
-                                ${statusHTML}
-                            </div>
-                            <div class="action-area">
-                                ${cartQty > 0 ? `
-                                    <button onclick="updateQty('${item.id}', -1)" style="background:#888; padding: 8px 12px;">-</button>
-                                    <span style="font-weight:bold; width: 25px; text-align:center; font-size: 16px;">${cartQty}</span>
-                                ` : ''}
-                                <button onclick="updateQty('${item.id}', 1)" ${!item.available ? 'disabled' : ''}>
-                                    ${cartQty > 0 ? '+ เพิ่ม' : 'เลือก'}
-                                </button>
-                            </div>
-                        `;
-                        container.appendChild(itemDiv);
-                    });
+                    createCategoryBlock(`🍓 ---- กล่องละ ${cat}฿ ---- 🍓`, items, false);
                 }
             });
+
+            // 2. หมวดพรีเมียม (มากกว่า 100 บาท)
+            const premiumItems = menuData.filter(item => Number(item.category) > 100);
+            if (premiumItems.length > 0) {
+                createCategoryBlock(`✨ ---- ผลไม้พรีเมียม ---- ✨`, premiumItems, false);
+            }
+
+            // 3. หมวดน้ำจิ้ม (0 และ 20 บาท เอามารวมกัน)
+            const dipItems = menuData.filter(item => Number(item.category) === 0 || Number(item.category) === 20);
+            if (dipItems.length > 0) {
+                createCategoryBlock(`🥣 ---- ตัวเลือกน้ำจิ้ม / พริกเกลือ ---- 🥣`, dipItems, true);
+            }
+
             updateCartBar();
+        }
+
+        // ฟังก์ชันสร้างบล็อกหมวดหมู่
+        function createCategoryBlock(title, items, isDip) {
+            const container = document.getElementById('menu-container');
+            const catTitle = document.createElement('div');
+            catTitle.className = isDip ? 'category-title cat-dip' : 'category-title';
+            catTitle.innerText = title;
+            container.appendChild(catTitle);
+
+            items.forEach(item => {
+                const cartQty = cart[item.id] || 0;
+                const itemDiv = document.createElement('div');
+                itemDiv.className = 'product-item';
+                
+                const statusHTML = item.available 
+                    ? `<div class="product-status status-in">✓ มีพร้อมส่ง</div>`
+                    : `<div class="product-status status-out">✗ สินค้าหมดชั่วคราว</div>`;
+
+                // ใส่ราคาไว้ท้ายชื่อ เพื่อให้เห็นชัดเจนสำหรับหมวดที่ราคารวมกัน (พรีเมียม, น้ำจิ้ม)
+                const priceLabel = `<span style="color: var(--apple-red); font-weight: bold; margin-left: 5px;">(${item.price > 0 ? item.price + '฿' : 'ฟรี'})</span>`;
+
+                itemDiv.innerHTML = `
+                    <div class="product-info">
+                        <div class="product-name ${!item.available ? 'out-of-stock-text' : ''}">✔️ ${item.name} ${priceLabel}</div>
+                        ${statusHTML}
+                    </div>
+                    <div class="action-area">
+                        ${cartQty > 0 ? `
+                            <button onclick="updateQty('${item.id}', -1)" style="background:#888; padding: 8px 12px;">-</button>
+                            <span style="font-weight:bold; width: 25px; text-align:center; font-size: 16px;">${cartQty}</span>
+                        ` : ''}
+                        <button onclick="updateQty('${item.id}', 1)" ${!item.available ? 'disabled' : ''}>
+                            ${cartQty > 0 ? '+ เพิ่ม' : 'เลือก'}
+                        </button>
+                    </div>
+                `;
+                container.appendChild(itemDiv);
+            });
         }
 
         function updateQty(id, change) {

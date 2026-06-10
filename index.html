@@ -22,8 +22,19 @@
         .btn-fb { background-color: var(--fb-blue); }
         .note-box { background-color: var(--apple-red-light); border: 2px dashed var(--apple-red); padding: 15px; border-radius: 8px; margin: 20px 0; text-align: center; color: var(--apple-red); font-weight: bold; }
         
-        .category-title { background-color: var(--apple-red); color: white; padding: 8px 20px; border-radius: 25px; display: inline-block; margin: 25px 0 15px 0; font-size: 18px; }
-        .cat-dip { background-color: #E68A00; } /* สีหมวดน้ำจิ้ม */
+        /* ฟอร์มข้อมูลลูกค้า (ย้ายมาด้านบน) */
+        .customer-form { background-color: #F8F5EE; padding: 20px; border-radius: 8px; margin: 15px 0 25px 0; border: 1px solid var(--border-color); }
+        .customer-form h3 { color: var(--apple-red); margin-bottom: 15px; font-size: 18px; text-align: center; }
+        .input-group { margin-bottom: 15px; }
+        .input-group label { display: block; margin-bottom: 5px; font-weight: bold; font-size: 14px; }
+        .input-group input, .input-group textarea { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px; font-size: 16px; font-family: 'Sarabun', sans-serif; }
+        .input-group input:focus, .input-group textarea:focus { outline: none; border-color: var(--apple-red); }
+
+        /* หัวข้อขั้นตอนที่ 2 */
+        .step2-title { text-align: center; color: var(--apple-red); font-size: 20px; margin-top: 10px; border-top: 2px dashed var(--border-color); padding-top: 20px; }
+
+        .category-title { background-color: var(--apple-red); color: white; padding: 8px 20px; border-radius: 25px; display: inline-block; margin: 20px 0 15px 0; font-size: 18px; }
+        .cat-dip { background-color: #E68A00; } 
 
         .product-item { display: flex; justify-content: space-between; align-items: center; padding: 15px 0; border-bottom: 1px solid var(--border-color); }
         .product-info { flex: 1; padding-right: 15px; word-break: keep-all; }
@@ -36,16 +47,8 @@
         .action-area { display: flex; align-items: center; gap: 10px; white-space: nowrap; }
         button { border: none; background-color: var(--apple-red); color: white; padding: 8px 15px; border-radius: 5px; cursor: pointer; transition: 0.2s; font-size: 14px; }
         button:disabled { background-color: var(--gray-out); cursor: not-allowed; }
-        
-        /* ฟอร์มข้อมูลลูกค้า */
-        .customer-form { background-color: #F8F5EE; padding: 20px; border-radius: 8px; margin-top: 30px; border: 1px solid var(--border-color); }
-        .customer-form h3 { color: var(--apple-red); margin-bottom: 15px; font-size: 18px; text-align: center; }
-        .input-group { margin-bottom: 15px; }
-        .input-group label { display: block; margin-bottom: 5px; font-weight: bold; font-size: 14px; }
-        .input-group input, .input-group textarea { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px; font-size: 16px; font-family: 'Sarabun', sans-serif; }
-        .input-group input:focus, .input-group textarea:focus { outline: none; border-color: var(--apple-red); }
 
-        .footer-notes { margin-top: 30px; padding: 20px; background-color: var(--bg-cream); border-radius: 8px; font-size: 14px; }
+        .footer-notes { margin-top: 40px; padding: 20px; background-color: var(--bg-cream); border-radius: 8px; font-size: 14px; border-top: 1px solid var(--border-color); }
         .footer-notes span { color: var(--apple-red); font-weight: bold; }
         
         .cart-bar { position: fixed; bottom: 0; left: 0; width: 100%; background-color: white; box-shadow: 0 -4px 15px rgba(0,0,0,0.08); padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; z-index: 100; }
@@ -58,33 +61,34 @@
     <div class="container">
         <div class="header">
             <h1>รายการผลไม้พร้อมส่งวันนี้</h1>
-            <p>เลือกสินค้าที่ต้องการ แล้วกดปุ่มสั่งซื้อผ่านแชทได้เลยนะคะ</p>
+            <p>กรอกข้อมูลจัดส่ง เลือกผลไม้ แล้วกดคัดลอกรายการส่งให้ร้านได้เลยค่ะ</p>
             <div class="contact-buttons">
                 <a href="https://lin.ee/oli8RVq" target="_blank" class="btn-line">💬 สั่งผ่าน LINE</a>
                 <a href="http://m.me/poksaipaak" target="_blank" class="btn-fb">💬 สั่งผ่าน Messenger</a>
             </div>
         </div>
         
-        <div class="note-box">‼️ ร้านขอปรับปริมาณและราคาผลไม้ตามความเหมาะสมของต้นทุนในแต่ละช่วงเวลา เนื่องจากผลไม้บางชนิดโดยเฉพาะผลไม้นำเข้า ราคาปรับขึ้นลงตลอด เพื่อให้สามารถส่งต่อความอร่อยในเมนูโปรดถึงคุณลูกค้าทุกท่านได้อย่างราบรื่นค่ะ ‼️</div>
+        <div class="note-box">‼️ ราคาและปริมาณของผลไม้ อาจปรับขึ้น-ลง ตามกลไกราคาในตลาดนะคะ ‼️</div>
         
-        <div id="menu-container">
-            <div style="text-align:center; padding:40px;">กำลังโหลดข้อมูลผลไม้และน้ำจิ้ม... ⏳</div>
-        </div>
-
         <div class="customer-form">
-            <h3>📝 ข้อมูลสำหรับจัดส่ง</h3>
+            <h3>📍 ขั้นตอนที่ 1: กรอกข้อมูลสำหรับจัดส่ง</h3>
             <div class="input-group">
                 <label>ชื่อ-นามสกุล / ชื่อเล่น:</label>
-                <input type="text" id="cust-name" placeholder="ระบุชื่อลูกค้า">
+                <input type="text" id="cust-name" placeholder="ระบุชื่อของคุณลูกค้า">
             </div>
             <div class="input-group">
                 <label>เบอร์โทรศัพท์ติดต่อ:</label>
-                <input type="tel" id="cust-phone" placeholder="ระบุเบอร์โทรศัพท์">
+                <input type="tel" id="cust-phone" placeholder="ระบุเบอร์โทรศัพท์สำหรับติดต่อ">
             </div>
             <div class="input-group">
-                <label>หมายเหตุเพิ่มเติม (ถ้ามี):</label>
-                <textarea id="cust-note" rows="2" placeholder="เช่น ขอส้อม 2 คัน, ปอกเปลือกให้ด้วย"></textarea>
+                <label>หมายเหตุเพิ่มเติมถึงร้าน (ถ้ามี):</label>
+                <textarea id="cust-note" rows="2" placeholder="เช่น ขอส้อม 2 คัน, แยกน้ำจิ้ม, จัดเซ็ตเยี่ยมไข้"></textarea>
             </div>
+        </div>
+
+        <h3 class="step2-title">🍉 ขั้นตอนที่ 2: เลือกผลไม้พรีเมียมพร้อมทาน</h3>
+        <div id="menu-container">
+            <div style="text-align:center; padding:40px;">กำลังโหลดข้อมูลผลไม้และน้ำจิ้ม... ⏳</div>
         </div>
         
         <div class="footer-notes">
@@ -103,6 +107,7 @@
     </div>
 
     <script>
+        // เชื่อมฐานข้อมูล Google Apps Script
         const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbziXKeVFE-_qwH1dEdE_AAGDvZmpZEKytWOSPjv-y3QrTVMosy2osVSwjMHs0epHdvt/exec'; 
         
         let menuData = []; 
@@ -122,8 +127,8 @@
             const container = document.getElementById('menu-container');
             container.innerHTML = '';
             
-            // 1. หมวดผลไม้ปกติ (ดึงตามช่วงราคา)
-            const standardCats = [40, 50, 60, 70, 80, 90, 100]; // ใส่เผื่อไว้ให้ครบทุกช่วงราคา
+            // 1. หมวดผลไม้ปกติ (40-100฿)
+            const standardCats = [40, 50, 60, 70, 80, 90, 100];
             standardCats.forEach(cat => {
                 const items = menuData.filter(item => Number(item.category) === cat);
                 if (items.length > 0) {
@@ -131,13 +136,13 @@
                 }
             });
 
-            // 2. หมวดพรีเมียม (มากกว่า 100 บาท)
+            // 2. หมวดพรีเมียม (ราคาเกิน 100฿ ขึ้นไป)
             const premiumItems = menuData.filter(item => Number(item.category) > 100);
             if (premiumItems.length > 0) {
                 createCategoryBlock(`✨ ---- ผลไม้พรีเมียม ---- ✨`, premiumItems, false);
             }
 
-            // 3. หมวดน้ำจิ้ม (0 และ 20 บาท เอามารวมกัน)
+            // 3. หมวดน้ำจิ้ม (ฟรี และ เพิ่มเงิน)
             const dipItems = menuData.filter(item => Number(item.category) === 0 || Number(item.category) === 20);
             if (dipItems.length > 0) {
                 createCategoryBlock(`🥣 ---- ตัวเลือกน้ำจิ้ม / พริกเกลือ ---- 🥣`, dipItems, true);
@@ -146,7 +151,6 @@
             updateCartBar();
         }
 
-        // ฟังก์ชันสร้างบล็อกหมวดหมู่
         function createCategoryBlock(title, items, isDip) {
             const container = document.getElementById('menu-container');
             const catTitle = document.createElement('div');
@@ -163,7 +167,6 @@
                     ? `<div class="product-status status-in">✓ มีพร้อมส่ง</div>`
                     : `<div class="product-status status-out">✗ สินค้าหมดชั่วคราว</div>`;
 
-                // ใส่ราคาไว้ท้ายชื่อ เพื่อให้เห็นชัดเจนสำหรับหมวดที่ราคารวมกัน (พรีเมียม, น้ำจิ้ม)
                 const priceLabel = `<span style="color: var(--apple-red); font-weight: bold; margin-left: 5px;">(${item.price > 0 ? item.price + '฿' : 'ฟรี'})</span>`;
 
                 itemDiv.innerHTML = `
@@ -211,7 +214,7 @@
             const custNote = document.getElementById('cust-note').value.trim();
 
             if(custName === "" || custPhone === "") {
-                alert("รบกวนคุณลูกค้ากรอก 'ชื่อ' และ 'เบอร์โทรศัพท์' ให้ครบถ้วนก่อนกดคัดลอกนะคะ 🙏");
+                alert("รบกวนคุณลูกค้ากรอก 'ชื่อ' และ 'เบอร์โทรศัพท์' ด้านบนสุดให้ครบถ้วนก่อนกดคัดลอกนะคะ 🙏");
                 return;
             }
 
@@ -238,6 +241,8 @@
         }
 
         loadData();
+        
+        // อัปเดตสถานะแบบ Real-time จาก Google Sheets ทุกๆ 15 วินาที
         setInterval(() => {
             fetch(SCRIPT_URL + '?action=getData')
             .then(res => res.json())

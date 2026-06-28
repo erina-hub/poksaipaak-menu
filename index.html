@@ -142,8 +142,8 @@
                 createCategoryBlock(`✨ ---- ผลไม้พรีเมียม ---- ✨`, premiumItems, false);
             }
 
-            // 3. หมวดน้ำจิ้มด้านล่างสุด (ปรับเป็นสั่งเพิ่มนอกเซ็ต/เสียเงินทั้งหมด)
-            const dipItems = menuData.filter(item => Number(item.category) === 0 || Number(item.category) === 20);
+            // 3. หมวดน้ำจิ้มด้านล่างสุด (ดึงทุกรายการที่รหัสหมวดหมู่ต่ำกว่า 40 มารวมกัน ไม่ว่าจะราคา 0, 5, 20 บาท)
+            const dipItems = menuData.filter(item => Number(item.category) < 40);
             if (dipItems.length > 0) {
                 createCategoryBlock(`🥣 ---- สั่งน้ำจิ้ม / พริกเกลือ เพิ่ม (นอกเซ็ต) ---- 🥣`, dipItems, true);
             }
@@ -167,13 +167,13 @@
                     ? `<div class="product-status status-in">✓ มีพร้อมส่ง</div>`
                     : `<div class="product-status status-out">✗ สินค้าหมดชั่วคราว</div>`;
 
-                // ปรับราคาป้ายแสดงผลสำหรับหมวดน้ำจิ้มสั่งเพิ่มนอกเซ็ต
+                // ปรับป้ายราคาน้ำจิ้มนอกเซ็ตให้แสดงตามราคาจริงในชีทอย่างถูกต้อง
                 let priceText = '';
                 if (isDip) {
                     if (Number(item.category) === 0 || item.price === 0) {
-                        priceText = `(สั่งเพิ่ม +10฿)`; // ถ้าน้ำจิ้มปกติสั่งแยก คิดราคาเริ่มต้น 10 บาท
+                        priceText = `(สั่งเพิ่ม +10฿)`; // ถ้าน้ำจิ้มชุดฟรีสั่งแยก คิดกล่องละ 10 บาท
                     } else {
-                        priceText = `(สั่งเพิ่ม +${item.price}฿)`;
+                        priceText = `(สั่งเพิ่ม +${item.price}฿)`; // แสดง +5฿ หรือ +20฿ ตามในระบบ Sheets
                     }
                 } else {
                     priceText = `(${item.price > 0 ? item.price + '฿' : 'ฟรี'})`;
@@ -181,7 +181,7 @@
 
                 const priceLabel = `<span style="color: var(--apple-red); font-weight: bold; margin-left: 5px;">${priceText}</span>`;
 
-                // 🎁 ส่วนของการเปิดกล่องเลือกน้ำจิ้มฟรีในเซ็ตสำหรับ มะม่วง / สับปะรด / แอปเปิ้ล
+                // ส่วนของการเปิดกล่องเลือกน้ำจิ้มฟรีในเซ็ตสำหรับ มะม่วง / สับปะรด / แอปเปิ้ล
                 let sauceSelectorHTML = '';
                 const isFruitWithSauce = item.name.includes('มะม่วง') || item.name.includes('สับปะรด') || item.name.includes('แอปเปิ้ล');
                 
@@ -191,7 +191,7 @@
                     
                     for (let i = 0; i < cartQty; i++) {
                         if (!cartSauces[item.id]) cartSauces[item.id] = [];
-                        if (!cartSauces[item.id][i]) cartSauces[item.id][i] = 'พริกเกลือนัวร์ (ฟรี)'; // ค่าเริ่มต้น
+                        if (!cartSauces[item.id][i]) cartSauces[item.id][i] = 'พริกเกลือนัวร์ (ฟรี)'; 
                         const currentSauce = cartSauces[item.id][i];
                         
                         sauceSelectorHTML += `
@@ -237,7 +237,6 @@
             if (!cart[id]) cart[id] = 0;
             cart[id] += change;
             
-            // จัดการข้อมูลอาเรย์น้ำจิ้มแถม
             if (!cartSauces[id]) cartSauces[id] = [];
             if (change > 0) {
                 for(let i = 0; i < change; i++) {
@@ -294,15 +293,14 @@
                 if(product) {
                     let nameWithExtra = product.name;
                     
-                    // ถ้าน้ำจิ้มถูกสั่งเพิ่มมาจากหมวดด้านล่างสุด (สั่งเพิ่มนอกเซ็ต)
-                    if (Number(product.category) === 0 || Number(product.category) === 20) {
+                    // ปรับระบบพิมพ์ข้อความตอน Copy สรุปออเดอร์ให้คำนวณตามจริง
+                    if (Number(product.category) < 40) {
                         const extraPrice = Number(product.category) === 0 ? 10 : product.price;
                         nameWithExtra += ` [สั่งเพิ่มนอกเซ็ต +${extraPrice}฿]`;
                     }
                     
                     orderText += `- ${nameWithExtra} x ${qty}`;
                     
-                    // ดึงรายการน้ำจิ้มที่แถมในกล่องผลไม้ออกมาแสดง
                     if (cartSauces[id] && cartSauces[id].length > 0) {
                         const sauceList = cartSauces[id].join(', ');
                         orderText += ` (${sauceList})`;
